@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <script>
+      /* Boot guard: a classic script, so it runs even where the game's module cannot. If the page cannot start
+         (module not loaded or not supported, a startup error in our code), say so instead of leaving a blank page. */
+      (function () {
+        var shown = false, stash = [];
+        function show(detail) {
+          if (shown || window.__arcadeBoot === 'ready') return;
+          shown = true;
+          var render = function () {
+            var box = document.createElement('div');
+            box.id = 'boot-error';
+            box.setAttribute('role', 'alert');
+            box.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;z-index:2147483647;display:flex;align-items:center;justify-content:center;padding:20px;background:#DEDBD3;color:#0B0B0B;font:16px/1.5 -apple-system,system-ui,sans-serif';
+            box.innerHTML = '<div style="max-width:440px;border:2px solid #0B0B0B;background:#F2F0EB;padding:20px">'
+              + '<p style="margin:0 0 10px;font-weight:600;font-size:19px;line-height:1.3">This page could not start in this browser. Open it in Safari or Chrome.</p>'
+              + '<p style="margin:0 0 14px;font-size:14px">Copy the address and paste it there. Nothing was paid or started.</p>'
+              + '<p id="boot-error-detail" style="margin:0;font:11px/1.45 ui-monospace,Menlo,monospace;color:#6B685F;word-break:break-word"></p></div>';
+            document.body.appendChild(box);
+            document.getElementById('boot-error-detail').textContent = String(detail).slice(0, 500) + ' · ' + navigator.userAgent;
+          };
+          if (document.body) render(); else document.addEventListener('DOMContentLoaded', render);
+        }
+        window.__arcadeBootFail = show;
+        var ours = function (url) { return typeof url === 'string' && url.indexOf(location.origin) === 0; };
+        window.addEventListener('error', function (event) {
+          if (window.__arcadeBoot === 'ready') return;
+          var target = event.target;
+          if (target && target !== window && target.tagName === 'SCRIPT') { show('Could not load ' + (target.src || 'the game script')); return; }
+          var message = (event.message || 'Error') + (event.filename ? ' (' + event.filename.split('/').pop() + ':' + event.lineno + ')' : '');
+          if (ours(event.filename)) show(message); else stash.push(message);   // a wallet's injected script is not our startup
+        }, true);
+        window.addEventListener('unhandledrejection', function (event) {
+          if (window.__arcadeBoot === 'ready') return;
+          var reason = event.reason, message = reason && reason.message ? reason.name + ': ' + reason.message : String(reason);
+          if (reason && typeof reason.stack === 'string' && reason.stack.indexOf(location.origin) >= 0) show(message); else stash.push(message);
+        });
+        window.addEventListener('load', function () {
+          // Module scripts run before "load": if ours never ran, it was refused (syntax, network, blocked).
+          setTimeout(function () { if (!window.__arcadeBoot) show('The game script did not run.' + (stash.length ? ' ' + stash.join(' · ') : '')); }, 3000);
+          setTimeout(function () { if (window.__arcadeBoot !== 'ready' && stash.length) show(stash.join(' · ')); }, 25000);
+        });
+      })();
+    </script>
+    <meta name="description" content="THE WALL ARCADE: a game played on the names of a real wall in Lisbon.">
+    <title>THE WALL ARCADE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./assets/styles.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <a id="hub-link" class="topbar-back" href="#" aria-label="Back to the arcade" hidden>←</a>
+      <span class="topbar-space"></span>
+      <button id="balance-badge" class="topbar-balance" type="button" aria-haspopup="dialog"><span id="balance-text">Sign in</span><span id="wallet-dot" class="wallet-dot" hidden></span></button>
+      <button id="info-button" class="topbar-info" type="button" aria-label="How it works" aria-haspopup="dialog">i</button>
+    </header>
+    <p id="people-band" class="people-band" hidden><span><b id="people-band-name"></b>, you have no character yet.</span> <a id="people-band-link" href="#">MAKE MINE (30 s) →</a></p>
+
+    <main id="stage-frame" class="stage-frame">
+      <div id="arena" class="arena" aria-label="Game"></div>
+      <section id="overlay" class="overlay" aria-live="polite">
+        <div class="overlay-card">
+          <h1 id="overlay-title">Loading…</h1>
+          <p class="overlay-line" id="overlay-line"></p>
+          <div class="overlay-score" id="overlay-score" hidden></div>
+          <div class="overlay-actions" id="overlay-actions"></div>
+          <p class="overlay-links" id="overlay-links"></p>
+          <p class="overlay-status" id="overlay-status" role="status"></p>
+          <div class="round-actions" id="round-actions"></div>
+          <div class="overlay-board" id="overlay-board">
+            <div class="board-head"><p class="board-title">This week</p></div>
+            <ol id="board-list" class="board-list"><li class="empty">Loading scores…</li></ol>
+            <p class="board-ends"></p>
+          </div>
+          <p class="overlay-credit" id="overlay-credit"><a href="https://onthewall.nfcsummit.com" target="_blank" rel="noopener">A Remix The Wall experiment · NFC Summit 2027 · Lisbon</a></p>
+        </div>
+      </section>
+      <p id="practice-banner" class="practice-tag" hidden>Practice</p>
+      <a id="corner-back" class="corner-back" href="#" aria-label="Back to the arcade" hidden>←</a>
+      <p id="round-status" class="sr-only" role="status"></p>
+      <p id="round-score" class="sr-only"></p>
+    </main>
+
+    <dialog id="wallet-panel" class="panel" aria-labelledby="wallet-title">
+      <header class="panel-header">
+        <h2 id="wallet-title">Wallet</h2>
+        <button class="panel-x" type="button" data-close aria-label="Close">✕</button>
+      </header>
+      <div class="panel-body">
+        <p id="wallet-credits" class="wallet-credits">Not signed in</p>
+        <button id="wallet-address" class="wallet-address" type="button" hidden></button>
+        <p id="connect-status" class="panel-note" role="status" aria-live="polite"></p>
+        <div class="panel-actions">
+          <button id="sign-in" class="primary wide" type="button" hidden>Sign in to SuperRare</button>
+          <button id="wallet-buy" class="primary wide" type="button" hidden>Buy credits</button>
+          <button id="connect" class="secondary" type="button" hidden>Retry game authorization</button>
+        </div>
+        <p id="connection-status" class="panel-note" role="status" aria-live="polite"></p>
+        <p class="panel-links">
+          <button id="sign-out" class="linklike" type="button" hidden>sign out</button>
+          <button id="purchase-help" class="linklike" type="button">purchase help</button>
+        </p>
+      </div>
+    </dialog>
+
+    <dialog id="help-panel" class="panel" aria-labelledby="help-title">
+      <header class="panel-header">
+        <h2 id="help-title">Purchase help</h2>
+        <button class="panel-x" type="button" data-close aria-label="Close">✕</button>
+      </header>
+      <div class="panel-body">
+        <section id="credits" class="credits credits--help" aria-label="Purchases and recovery"></section>
+        <p class="panel-note">Signing in, buying credits and spending a credit are separate approvals. Reloading this page or visiting another game never buys credits or starts a paid play.</p>
+      </div>
+    </dialog>
+
+    <dialog id="buy-panel" class="panel panel--buy" aria-labelledby="buy-offer">
+      <button class="panel-x panel-x--float" type="button" data-close aria-label="Close">✕</button>
+      <div class="panel-body">
+        <h2 class="buy-offer" id="buy-offer">Credits</h2>
+        <p class="buy-from">Pay from <strong id="buy-wallet">—</strong> only</p>
+        <button id="buy-pay" class="primary wide" type="button">Pay</button>
+        <p id="buy-status" class="panel-note" role="status" aria-live="polite"></p>
+        <button id="buy-recovery" class="linklike" type="button" hidden>open purchase help</button>
+        <details class="buy-more">
+          <summary>what happens when I pay?</summary>
+          <p id="buy-explain"></p>
+        </details>
+      </div>
+    </dialog>
+
+    <dialog id="info-panel" class="panel" aria-labelledby="info-title">
+      <header class="panel-header">
+        <h2 id="info-title">How it works</h2>
+        <button class="panel-x" type="button" data-close aria-label="Close">✕</button>
+      </header>
+      <div class="panel-body info">
+        <h3>The game</h3>
+        <p id="info-game"></p>
+        <h3>Credits and price</h3>
+        <p id="info-price"></p>
+        <h3>Practice</h3>
+        <p>Practice is free and runs in your browser: same rules, nothing recorded, no credit spent.</p>
+        <h3>Server verification</h3>
+        <p>A paid run is played on SuperRare's server: the server keeps the clock, replays every move with the game's own rules and records the score. The page never sends a score.</p>
+        <h3>Weekly prizes</h3>
+        <p>One leaderboard per game, for the week: Friday 15:00 to Friday 15:00, Lisbon time. The first week runs from Thursday Oct 22, 00:00 to Friday Oct 30, 15:00. Every paid play goes straight into the jackpot. Every Friday it's split: half to the best score on each game, 40% to the artists who made the games, 10% to the wall.</p>
+        <h3>Purchase recovery</h3>
+        <p>If credits you paid for don't show up, open the wallet, then "purchase help": it continues or claims an unfinished purchase. Never pay a second time for it.</p>
+        <p class="info-credit"><a href="https://onthewall.nfcsummit.com" target="_blank" rel="noopener">A Remix The Wall experiment · NFC Summit 2027 · Lisbon</a></p>
+      </div>
+    </dialog>
+
+    <dialog id="connect-modal" class="panel panel--connect" aria-labelledby="connect-modal-title" aria-describedby="connect-modal-status">
+      <header class="panel-header">
+        <h2 id="connect-modal-title">SuperRare Connect</h2>
+        <button id="connect-close" class="panel-x" type="button" aria-label="Close">✕</button>
+      </header>
+      <p id="connect-modal-status" class="panel-note connect-note" role="status" aria-live="polite">Sign-in and payment approvals happen only after you choose an action.</p>
+      <div id="connect-embed"></div>
+    </dialog>
+
+    <script type="module" src="./assets/app.js"></script>
+    <script nomodule>window.__arcadeBootFail && window.__arcadeBootFail('This browser does not run JavaScript modules.');</script>
+  </body>
+</html>

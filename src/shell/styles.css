@@ -1,0 +1,200 @@
+/* THE WALL ARCADE on Connect: one screen. The NFC brutalist system (concrete / ink / Anton / one blue accent). */
+:root {
+  --concrete: #DEDBD3; --ink: #0B0B0B; --chalk: #F2F0EB; --label: #6B685F; --label-lt: #B0ACA2; --rule: #C4C0B6; --blue: #2E7FD6;
+  --anton: Anton, Impact, "Arial Narrow", sans-serif; --mono: "IBM Plex Mono", ui-monospace, monospace; --inter: Inter, system-ui, sans-serif;
+  --bar: 44px;
+  color-scheme: light;
+}
+[hidden] { display: none !important; }
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+html { background: var(--concrete); }
+body { margin: 0; color: var(--ink); background: var(--concrete); font: 300 15px/1.55 var(--inter); -webkit-text-size-adjust: 100%; overflow: hidden; }
+a { color: var(--ink); text-underline-offset: 3px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+button { min-height: 44px; padding: 10px 16px; border: 1px solid var(--ink); border-radius: 0; color: var(--chalk); background: var(--ink); font: 500 13px/1.2 var(--mono); letter-spacing: .12em; text-transform: uppercase; cursor: pointer; touch-action: manipulation; }
+button:hover:not(:disabled) { background: var(--chalk); color: var(--ink); }
+button.secondary { color: var(--ink); background: transparent; }
+button.secondary:hover:not(:disabled) { background: var(--ink); color: var(--chalk); }
+button.primary { background: var(--blue); border-color: var(--blue); color: var(--ink); }
+button.primary:hover:not(:disabled) { background: var(--ink); border-color: var(--ink); color: var(--chalk); }
+button.wide { width: 100%; min-height: 54px; font-size: 14px; }
+button:disabled { opacity: .4; cursor: not-allowed; }
+button:focus-visible, summary:focus-visible, a:focus-visible, canvas:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+/* text links: plain words, underlined (the third tier after the blue button and the ink one) */
+button.linklike { min-height: 0; padding: 4px 0; border: 0; background: none; color: var(--ink); text-decoration: underline; text-underline-offset: 3px; font: 400 15px/1.4 var(--inter); letter-spacing: 0; text-transform: none; }
+button.linklike:hover:not(:disabled) { background: none; color: var(--blue); }
+
+/* ------------------------------- top bar -------------------------------- */
+.topbar { position: fixed; inset: 0 0 auto; z-index: 5; display: flex; align-items: center; gap: 8px; height: calc(var(--bar) + env(safe-area-inset-top)); padding: env(safe-area-inset-top) max(10px, env(safe-area-inset-right)) 0 max(6px, env(safe-area-inset-left)); background: var(--ink); color: var(--chalk); }
+.topbar a { color: var(--chalk); text-decoration: none; white-space: nowrap; }
+.topbar-back { display: inline-flex; align-items: center; justify-content: center; min-width: 40px; height: 40px; font: 400 22px/1 var(--inter); }
+.topbar-space { flex: 1; }
+.topbar button { min-height: 32px; padding: 6px 12px; border-color: var(--chalk); background: transparent; color: var(--chalk); font-size: 13px; letter-spacing: .1em; }
+.topbar button:hover:not(:disabled) { background: var(--chalk); color: var(--ink); }
+.topbar-balance { position: relative; }
+.topbar-info { width: 32px; padding: 0 !important; border-radius: 50% !important; font: 500 15px/1 var(--inter) !important; letter-spacing: 0 !important; text-transform: none !important; }
+.wallet-dot { position: absolute; top: -4px; right: -4px; width: 9px; height: 9px; background: var(--blue); border: 1px solid var(--chalk); }
+
+/* ------------------------------- the frame ------------------------------- */
+.stage-frame { position: fixed; inset: calc(var(--bar) + env(safe-area-inset-top)) 0 0; display: flex; align-items: center; justify-content: center; padding: 0 env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); }
+.arena { position: relative; }
+/* a run: the game has the whole screen; a discreet ← in the corner */
+body.is-playing .topbar { display: none; }
+body.is-playing .stage-frame { top: env(safe-area-inset-top); }
+/* a holder of a name with no character yet: one band under the bar (not during a run) */
+.people-band { position: fixed; inset: calc(var(--bar) + env(safe-area-inset-top)) 0 auto; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 2px 12px; min-height: 40px; margin: 0; padding: 6px 12px; background: var(--blue); color: var(--ink); font: 400 14px/1.35 var(--inter); text-align: center; }
+.people-band b { font: 500 14px/1.35 var(--mono); letter-spacing: .04em; }
+.people-band a { color: var(--ink); font: 500 13px/1.35 var(--mono); letter-spacing: .1em; white-space: nowrap; }
+body.has-band .stage-frame { top: calc(var(--bar) + 40px + env(safe-area-inset-top)); }
+body.is-playing .people-band { display: none; }
+body.is-playing.has-band .stage-frame { top: env(safe-area-inset-top); }
+.corner-back { position: absolute; z-index: 3; top: 4px; left: 4px; display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; color: var(--ink); text-decoration: none; font: 400 22px/1 var(--inter); opacity: .55; }
+.corner-back:hover { opacity: 1; }
+.practice-tag { position: absolute; z-index: 3; top: 14px; left: 48px; margin: 0; font: 500 13px/1 var(--mono); letter-spacing: .18em; text-transform: uppercase; color: var(--blue); pointer-events: none; }
+
+.overlay { position: absolute; inset: 0; z-index: 2; display: flex; align-items: flex-start; justify-content: center; padding: 14px; background: rgba(222, 219, 211, .72); overflow-y: auto; }
+.overlay.is-busy .overlay-actions, .overlay.is-busy .overlay-links, .overlay.is-busy .overlay-board { display: none; }
+.overlay-card { margin: auto 0; width: 100%; max-width: 380px; padding: 20px 18px 14px; border: 1px solid var(--ink); background: var(--chalk); }
+.overlay h1 { margin: 0; font: 400 clamp(44px, 13vw, 64px)/.92 var(--anton); text-transform: uppercase; }
+.overlay-line { margin: 10px 0 16px; font: 300 16px/1.45 var(--inter); }
+.overlay-score { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; margin: 0 0 14px; background: var(--rule); border: 1px solid var(--rule); }
+.overlay-score div { padding: 8px 6px; background: var(--chalk); }
+.overlay-score span { display: block; font: 500 13px/1.3 var(--mono); color: var(--label); }
+.overlay-score strong { display: block; margin-top: 2px; font: 400 26px/1 var(--anton); overflow-wrap: anywhere; }
+.overlay-actions { display: grid; gap: 8px; }
+.overlay-actions button { white-space: nowrap; padding-left: 10px; padding-right: 10px; }   /* one line, even on a 320 px phone */
+.overlay-actions .play { min-height: 58px; font-size: clamp(13px, 4vw, 15px); letter-spacing: .1em; background: var(--blue); border-color: var(--blue); color: var(--ink); }
+.overlay-actions .play:hover:not(:disabled) { background: var(--ink); border-color: var(--ink); color: var(--chalk); }
+.overlay-actions .ink { min-height: 52px; font-size: clamp(13px, 3.8vw, 14px); letter-spacing: .1em; }
+.overlay-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 18px; margin: 8px 0 0; font: 400 15px/1.4 var(--inter); }
+.overlay-links:empty { display: none; }
+.overlay-links a { color: var(--ink); }
+.overlay-status { margin: 10px 0 0; min-height: 1.2em; font: 400 14px/1.5 var(--inter); color: var(--ink); }
+.overlay-status:empty { display: none; }
+.round-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.round-actions:empty { display: none; }
+.round-actions button { flex: 1 1 auto; }
+.error-details { width: 100%; font: 400 13px/1.5 var(--mono); color: var(--label); overflow-wrap: anywhere; }
+.overlay-board { margin-top: 16px; padding-top: 10px; border-top: 1px solid var(--rule); }
+.board-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin: 0 0 4px; }
+.board-title { margin: 0; font: 500 13px/1.3 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--label); }
+.board-post { font: 400 14px/1.3 var(--inter); color: var(--ink); white-space: nowrap; }
+.board-post.is-preparing { opacity: .45; pointer-events: none; text-decoration: none; }
+.board-ends { margin: 6px 0 0; font: 400 13px/1.3 var(--inter); color: var(--label); }
+.board-list { margin: 0; padding: 0; list-style: none; font: 400 14px/1.3 var(--mono); font-variant-numeric: tabular-nums; }
+.board-list li { display: grid; grid-template-columns: 22px 1fr auto; gap: 8px; padding: 5px 0; border-bottom: 1px solid var(--rule); }
+.board-list li > span:nth-child(2) { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.board-list li.me { font-weight: 500; color: var(--blue); }
+.board-list li.empty { display: block; font-family: var(--inter); color: var(--label); }
+.board-list .rank { color: var(--label); }
+.overlay-credit { margin: 14px 0 0; font: 400 13px/1.4 var(--inter); color: var(--label); }
+.overlay-credit a { color: var(--label); }
+
+/* --------------------------------- panels -------------------------------- */
+.panel { width: min(420px, calc(100vw - 20px)); max-width: none; max-height: calc(100dvh - 20px); padding: 0; border: 1px solid var(--ink); border-radius: 0; color: var(--ink); background: var(--chalk); overflow: auto; }
+.panel::backdrop { background: rgba(11, 11, 11, .55); }
+.panel-header { position: sticky; top: 0; z-index: 1; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 8px 8px 16px; background: var(--ink); color: var(--chalk); }
+.panel-header h2 { margin: 0; font: 400 22px/1 var(--anton); text-transform: uppercase; }
+.panel-x { min-height: 40px; width: 40px; padding: 0; border: 0; background: transparent; color: var(--chalk); font: 400 18px/1 var(--inter); }
+.panel-x:hover:not(:disabled) { background: var(--chalk); color: var(--ink); }
+.panel-x--float { position: absolute; top: 6px; right: 6px; color: var(--ink); }
+.panel-x--float:hover:not(:disabled) { background: var(--ink); color: var(--chalk); }
+.panel-body { padding: 16px; }
+.panel-note { margin: 8px 0; font: 400 14px/1.5 var(--inter); color: var(--label); overflow-wrap: anywhere; }
+.panel-note:empty { display: none; }
+.panel-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0; }
+.panel-actions:empty { display: none; }
+.panel-links { display: flex; flex-wrap: wrap; gap: 4px 22px; margin: 6px 0 0; }
+.wallet-credits { margin: 2px 0 2px; font: 400 48px/1 var(--anton); text-transform: uppercase; }
+.wallet-address { min-height: 0; padding: 4px 0; border: 0; background: none; color: var(--ink); font: 400 15px/1.4 var(--mono); letter-spacing: .02em; text-transform: none; text-decoration: underline dotted; text-underline-offset: 4px; }
+.wallet-address:hover:not(:disabled) { background: none; color: var(--blue); }
+.panel-subtitle { margin: 18px 0 6px; font: 600 15px/1.3 var(--inter); }
+.credits p { font: 400 14px/1.55 var(--inter); overflow-wrap: anywhere; }
+.credits p:empty { display: none; }
+.credits--help > p:first-child { display: none; }          /* the balance: the wallet shows it */
+.credits--help .buy-plain { display: none; }                /* nothing to recover: the wallet's own BUY does that */
+.credit-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+.credit-actions:empty { display: none; }
+.purchase-history { margin: 0; padding: 0; list-style: none; font: 400 13px/1.5 var(--mono); }
+.purchase-history li { padding: 6px 0; border-bottom: 1px solid var(--rule); overflow-wrap: anywhere; }
+.purchase-history li.empty { font-family: var(--inter); font-size: 14px; color: var(--label); }
+.credits details { margin-top: 16px; font: 400 14px/1.55 var(--inter); }
+.credits summary { cursor: pointer; font-weight: 600; }
+.technical-details { white-space: pre-line; overflow-wrap: anywhere; font: 400 13px/1.5 var(--mono); color: var(--label); }
+
+.panel--buy .panel-body { padding: 22px 16px 16px; }
+.buy-offer { margin: 0 40px 10px 0; font: 400 32px/1.05 var(--anton); text-transform: uppercase; }
+.buy-from { margin: 0 0 16px; font: 400 16px/1.45 var(--inter); overflow-wrap: anywhere; }
+.buy-from strong { font: 500 15px/1.45 var(--mono); }
+.buy-more { margin-top: 14px; font: 400 14px/1.55 var(--inter); }
+.buy-more summary { cursor: pointer; text-decoration: underline; text-underline-offset: 3px; list-style: none; }
+.buy-more summary::-webkit-details-marker { display: none; }
+.buy-more p { margin: 8px 0 0; color: var(--label); }
+
+.info h3 { margin: 16px 0 4px; font: 600 15px/1.3 var(--inter); }
+.info h3:first-child { margin-top: 0; }
+.info p { margin: 0; font: 400 14px/1.55 var(--inter); color: var(--ink); }
+.info .info-credit { margin-top: 18px; font-size: 13px; }
+.info .info-credit a { color: var(--label); }
+
+.panel--connect { width: min(760px, calc(100vw - 16px)); overflow: hidden; }
+.connect-note { margin: 0; padding: 8px 14px; }
+#connect-embed iframe { display: block; width: 100%; height: min(72dvh, 720px); min-height: 380px; border: 0; background: white; }
+
+/* ------------------------------ game stages ------------------------------ */
+.ub-canvas { display: block; background: var(--concrete); touch-action: none; -webkit-user-select: none; user-select: none; }
+.ub-sound { position: absolute; z-index: 1; right: 6px; bottom: 6px; min-height: 0; padding: 4px 8px; font-size: 13px; letter-spacing: .08em; background: var(--chalk); }
+
+.tap-arena { width: min(460px, 100vw); height: 100%; padding: 16px 14px; overflow-y: auto; display: flex; flex-direction: column; justify-content: center; }
+.diag-text { width: 100%; height: 160px; margin-top: 8px; font: 400 9px/1.3 var(--mono); }
+.stage-message { margin: 0; padding: 40px 18px; border: 1px dashed var(--ink); text-align: center; font: 500 11px/1.7 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--label); }
+.tap-run { display: flex; flex-direction: column; gap: 14px; }
+.tap-hud { display: flex; justify-content: space-between; align-items: baseline; font: 500 11px/1 var(--mono); letter-spacing: .16em; text-transform: uppercase; }
+.tap-streak { font: 400 30px/1 var(--anton); letter-spacing: 0; }
+.tap-timer { height: 8px; background: var(--rule); }
+.tap-timer-fill { height: 100%; width: 100%; background: var(--blue); }
+.tap-timer-fill.danger { background: var(--ink); }
+.tap-prompt { text-align: center; padding: 14px 6px; }
+.tap-label { margin-bottom: 8px; font: 500 10px/1 var(--mono); letter-spacing: .22em; color: var(--label); }
+.tap-name { font: 400 clamp(28px, 8vw, 46px)/1.05 var(--anton); text-transform: uppercase; overflow-wrap: anywhere; animation: flashPulse .6s ease-in-out infinite; }
+@keyframes flashPulse { 0%, 100% { opacity: 1; } 50% { opacity: .55; } }
+.tap-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.tap-option { min-height: 68px; padding: 12px 8px; font: 500 clamp(12px, 3.6vw, 15px)/1.25 var(--mono); letter-spacing: .04em; color: var(--ink); background: var(--chalk); border: 2px solid var(--ink); overflow-wrap: anywhere; }
+.tap-option:hover:not(:disabled) { background: var(--ink); color: var(--chalk); }
+.tap-option.correct { background: var(--blue); color: var(--ink); }
+.tap-option.wrong { background: var(--ink); color: var(--chalk); text-decoration: line-through; }
+
+@media (max-width: 520px) {
+  .overlay { padding: 10px; }
+  .overlay-card { padding: 18px 14px 12px; }
+}
+@media (prefers-reduced-motion: reduce) { .tap-name { animation: none; } }
+
+/* ------------------- end of a run drawn by the game (own-end) ------------------- */
+/* A game that draws its own end screen (WET PAINT): the card itself, full width, SHARE in blue
+   under it; the page's card shrinks to a bar under that: PLAY AGAIN in ink and a text link. */
+.own-end .overlay.is-end { align-items: flex-end; background: none; pointer-events: none; padding: 0; }
+.own-end .overlay.is-end .overlay-card { margin: auto 0 0; pointer-events: auto; max-width: none; padding: 10px 14px 10px; border-width: 1px 0 0; }
+.own-end .overlay.is-end h1, .own-end .overlay.is-end .overlay-score, .own-end .overlay.is-end .overlay-line,
+.own-end .overlay.is-end .overlay-board { display: none; }
+.own-end .overlay.is-end .overlay-links { margin-top: 6px; }
+.end-panel { position: absolute; inset: 0 0 auto; bottom: 112px; z-index: 1; display: flex; flex-direction: column; justify-content: center; gap: 12px; padding: 12px 12px 10px; overflow-y: auto; background: var(--concrete); }
+.end-card { display: block; width: 100%; height: auto; aspect-ratio: 1; border: 1px solid var(--ink); }
+.end-post { display: flex; align-items: center; justify-content: center; min-height: 56px; padding: 0 16px; background: var(--blue); color: var(--ink); text-decoration: none; font: 500 15px/1.2 var(--mono); letter-spacing: .14em; text-transform: uppercase; text-align: center; }
+@media (hover: hover) { .end-post:hover { background: var(--ink); color: var(--chalk); } }
+.end-post.is-preparing { opacity: .55; pointer-events: none; }
+.end-wall { align-self: flex-end; margin-top: -4px; font: 400 13px/1.4 var(--inter); color: var(--label); }
+body:not(.is-playing) .ub-sound { display: none; }   /* sound is a control of the run, not of the entry or end screens */
+
+/* ------------------------------- WET PAINT ------------------------------- */
+/* The end screen: the artwork card (3:4), the names painted on it, SHARE in blue, a row of small links. */
+.wp-end { justify-content: flex-start; align-items: stretch; }
+.wp-card { aspect-ratio: 3 / 4; flex: none; width: auto; max-width: 100%; height: 66%; align-self: center; }
+.wp-names { margin: 0; }
+.wp-names-head { margin: 0 0 6px; font: 500 11px/1.4 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--label); }
+.wp-names ul { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.wp-names li { padding: 3px 8px; border: 1px solid var(--ink); background: var(--chalk); font: 400 14px/1.3 var(--anton); letter-spacing: .02em; }
+.wp-row { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 14px; margin: 0; font: 400 13px/1.4 var(--inter); color: var(--label); }
+.wp-row a { color: var(--label); }

@@ -1,0 +1,18 @@
+WET PAINT, a game of THE WALL ARCADE on SuperRare Connect
+Copyright (c) 2026 osaykancuno (K4NCUN0 on the wall)
+SPDX-License-Identifier: MIT
+
+Game rules, art direction and simulation of WET PAINT (src/games/wet-paint/, src/verifiers/wet-paint.ts,
+tests/wet-paint.test.ts, PUBBLICA.cmd, PUBBLICA.ps1) are original, by osaykancuno.
+
+The shared plumbing under src/shell/, src/share/, src/common/ and src/dev/ is THE WALL ARCADE's code
+(https://github.com/hs7j4yk4sz-boop/wall-arcade-connect, Copyright (c) 2026 NFC Summit, MIT). Its Connect parts
+(paid-credit purchase and recovery UI, paid-round / server-run state machine, wallet-isolated storage, hosted-flow
+error mapping) and the verifier request protocol under src/verifiers/ are adapted from
+https://github.com/superrare/studio-games-example (MIT, Copyright (c) 2026 SuperRare), itself adapted from
+examples/target-game in @rareprotocol/connect (https://github.com/superrare/superrare-connect, MIT,
+Copyright (c) 2026 SuperRare). Upstream license retained in LICENSE.
+
+The names of the wall (src/generated/wall.json) are public data of ON THE WALL by NFC Summit
+(https://onthewall.nfcsummit.com). Runtime dependency @rareprotocol/connect is distributed under MIT; other
+dependencies retain their own package license notices in node_modules.

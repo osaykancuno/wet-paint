@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.env
+.env.*
+*.log
+*.tgz
+.DS_Store
+# the --json answer of "rare-profile app deploy" (kept locally only, so a second app is never created)
+deploy/*.app.json
+deploy/private/
