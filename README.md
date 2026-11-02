@@ -1,5 +1,7 @@
 # WET PAINT
 
+**Play: https://5hv4fjbq.srstudio.dev/**
+
 A game of [THE WALL ARCADE](https://6972mvu4.srstudio.dev/), the arcade played on the names of a real wall in Lisbon
 (ON THE WALL by NFC Summit). By osaykancuno (K4NCUN0 on the wall).
 
@@ -26,9 +28,10 @@ with the names of the people of the wall.
 
 ## Publish (Windows)
 
-Double-click `PUBBLICA.cmd`. The first time it installs what is missing, logs in to SuperRare Studio, creates the app
-once (`deploy/wet-paint.config.json`), then builds and publishes; every later run updates the same app. Details in
-[docs/wet-paint.md](docs/wet-paint.md) (Italian).
+Double-click `PUBBLICA.cmd`. It always updates THE app of WET PAINT, https://5hv4fjbq.srstudio.dev, and never creates
+another one (`scripts/wet-paint-config.ts` refuses any other origin): it installs what is missing, refreshes the names
+of the wall, runs the tests, logs in if needed, builds and publishes. The first time on a computer it asks for the
+App ID once and writes `deploy/wet-paint.config.json`. Details in [docs/wet-paint.md](docs/wet-paint.md) (Italian).
 
 Elsewhere (Node.js 22+, `npm install --global @rareprotocol/rare-profile@0.1.0`, `rare-profile login`):
 

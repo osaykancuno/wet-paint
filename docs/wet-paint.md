@@ -1,5 +1,7 @@
 # WET PAINT
 
+**Il gioco: https://5hv4fjbq.srstudio.dev/** (l'unica app di WET PAINT: ogni pubblicazione aggiorna questa).
+
 Un gioco di THE WALL ARCADE. I nomi del muro diventano pennellate vive: un nome appare come una goccia di vernice
 fresca, poi un pennello parte dalla goccia e lo scrive lungo un percorso fluido. **Metti il dito (o il mouse) sulla
 goccia e segui il pennello fino in fondo prima che la vernice si asciughi.** Ogni pennellata completata resta sul muro:
@@ -25,11 +27,11 @@ Pratica gratuita con le stesse regole nel browser, niente registrato.
 
 ## Pubblicare da Windows
 
-Doppio clic su `PUBBLICA.cmd` (la prima volta e ogni volta che il gioco cambia). Fa tutto `PUBBLICA.ps1`: controlla
-Node.js, installa la riga di comando di SuperRare e le dipendenze, aggiorna i nomi del muro, lancia i test, fa il login
-se serve, crea l'app una volta sola (la risposta resta in `deploy/wet-paint.app.json`, che non va su git; la config in
-`deploy/wet-paint.config.json`), costruisce lo ZIP e aggiorna la stessa app; alla fine stampa i dati per il modulo di
-invio e apre il gioco e la pagina di invio.
+Doppio clic su `PUBBLICA.cmd` ogni volta che il gioco cambia. Fa tutto `PUBBLICA.ps1`: controlla Node.js, installa la
+riga di comando di SuperRare e le dipendenze, aggiorna i nomi del muro, lancia i test, fa il login se serve, costruisce
+lo ZIP e aggiorna **sempre la stessa app, https://5hv4fjbq.srstudio.dev**: non ne crea mai un'altra (lo script della
+config rifiuta qualsiasi altro indirizzo). La prima volta su un computer chiede l'App ID e scrive
+`deploy/wet-paint.config.json`. Alla fine stampa i dati per il modulo di invio e apre il gioco e la pagina di invio.
 
 ## Dove sta
 
